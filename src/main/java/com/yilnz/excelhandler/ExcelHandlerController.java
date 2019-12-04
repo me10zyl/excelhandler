@@ -17,9 +17,15 @@ public class ExcelHandlerController implements Initializable {
 	@FXML
 	private Button btnBrowse;
 	@FXML
-	private Button btnStart;
+	private Button btn1;
+	@FXML
+	private Button btn2;
+	@FXML
+	private Button btn3;
 	@FXML
 	private TextField input1;
+	@FXML
+	private TextField input2;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -32,13 +38,8 @@ public class ExcelHandlerController implements Initializable {
 				input1.setText(file.getPath());
 			}
 		});
-		btnStart.setOnAction(e -> {
-			if (StringUtils.isBlank(input1.getText())) {
-				final Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setContentText("请选择EXCEL文件");
-				alert.showAndWait();
-				return;
-			}
+		btn1.setOnAction(e -> {
+			if (validate()) return;
 			try {
 				new ExcelHandler().handleExcelSeq(new File(input1.getText()));
 				final Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -50,5 +51,41 @@ public class ExcelHandlerController implements Initializable {
 				alert.showAndWait();
 			}
 		});
+		btn2.setOnAction(e -> {
+			if (validate()) return;
+			try {
+				new ExcelHandler().handleExcelSeq2(new File(input1.getText()));
+				final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setContentText("处理完毕, 已生成新的文件");
+				alert.showAndWait();
+			} catch (Exception ee) {
+				final Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText(ee.getMessage());
+				alert.showAndWait();
+			}
+		});
+		btn3.setOnAction(e -> {
+			if (validate()) return;
+			try {
+				new ExcelHandler().handleExcelSeq3(new File(input1.getText()), input2.getText());
+				final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setContentText("处理完毕, 已生成新的文件");
+				alert.showAndWait();
+			} catch (Exception ee) {
+				final Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText(ee.getMessage());
+				alert.showAndWait();
+			}
+		});
+	}
+
+	private boolean validate() {
+		if (StringUtils.isBlank(input1.getText())) {
+			final Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("请选择EXCEL文件");
+			alert.showAndWait();
+			return true;
+		}
+		return false;
 	}
 }

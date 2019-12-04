@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yilnz.excelhandler.ExcelHandlerController">
    <children>
       <Button fx:id="btnBrowse" layoutX="393.0" layoutY="150.0" mnemonicParsing="false" text="选择Excel..." />
-      <TextField fx:id="input1" layoutX="157.0" layoutY="150.0" prefHeight="27.0" prefWidth="224.0" />
-      <Button fx:id="btnStart" layoutX="207.0" layoutY="200.0" mnemonicParsing="false" text="Excel合并单元格处理" />
+      <TextField fx:id="input1" layoutX="85.0" layoutY="150.0" prefHeight="27.0" prefWidth="296.0" />
+      <Button fx:id="btn1" layoutX="86.0" layoutY="207.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="122.0" text="根据空白行合并" />
       <Label layoutX="229.0" layoutY="82.0" text="ExcelHandler" />
+      <Button fx:id="btn2" layoutX="233.0" layoutY="207.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="142.0" text="合并列1数字" />
+      <Button fx:id="btn3" layoutX="86.0" layoutY="328.0" mnemonicParsing="false" text="根据列2正则合并" />
+      <TextField fx:id="input2" layoutX="180.0" layoutY="284.0" prefHeight="27.0" prefWidth="365.0" />
+      <Label layoutX="85.0" layoutY="289.0" text="列2正则表达式" />
    </children>
 </AnchorPane>
