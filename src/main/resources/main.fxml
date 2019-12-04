@@ -14,5 +14,6 @@
       <Button fx:id="btn3" layoutX="86.0" layoutY="328.0" mnemonicParsing="false" text="根据列2正则合并" />
       <TextField fx:id="input2" layoutX="180.0" layoutY="284.0" prefHeight="27.0" prefWidth="365.0" />
       <Label layoutX="85.0" layoutY="289.0" text="列2正则表达式" />
+      <Button fx:id="btn4" layoutX="85.0" layoutY="37.0" mnemonicParsing="false" text="检查是否有空行" />
    </children>
 </AnchorPane>

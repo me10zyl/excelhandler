@@ -23,6 +23,8 @@ public class ExcelHandlerController implements Initializable {
 	@FXML
 	private Button btn3;
 	@FXML
+	private Button btn4;
+	@FXML
 	private TextField input1;
 	@FXML
 	private TextField input2;
@@ -70,6 +72,18 @@ public class ExcelHandlerController implements Initializable {
 				new ExcelHandler().handleExcelSeq3(new File(input1.getText()), input2.getText());
 				final Alert alert = new Alert(Alert.AlertType.INFORMATION);
 				alert.setContentText("处理完毕, 已生成新的文件");
+				alert.showAndWait();
+			} catch (Exception ee) {
+				final Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText(ee.getMessage());
+				alert.showAndWait();
+			}
+		});
+		btn4.setOnAction(e -> {
+			if (validate()) return;
+			try {
+				final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setContentText(new ExcelHandler().checkExcelBlankRow(new File(input1.getText())));
 				alert.showAndWait();
 			} catch (Exception ee) {
 				final Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -290,6 +291,30 @@ public class ExcelHandler {
 		}
 	}
 
+	public String checkExcelBlankRow(File file){
+		String text = "没有空行";
+		try {
+			final Workbook workbook = getWorkbook(file);
+			final Sheet sheet = workbook.getSheetAt(0);
+			List<Long> nums = new ArrayList<>();
+			for(int i = 0;i <= sheet.getLastRowNum();i++){
+				final Row row = sheet.getRow(i);
+				final Cell cell = row.getCell(0);
+				final Cell cell1 = row.getCell(1);
+				if (row == null ||  (cell != null && cell1 != null && StringUtils.isBlank(cell.toString()) && StringUtils.isBlank(cell1.toString()))) {
+					nums.add((long) (i + 1));
+				}
+			}
+			if (nums.size() > 0) {
+				text = "有空行：" + nums;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+		return text;
+	}
+
 	private File renamedFile(File f){
 		final String name = f.getName();
 		final String parent = f.getParent();
@@ -302,6 +327,8 @@ public class ExcelHandler {
 	public static void main(String[] args) {
 		//new ExcelHandler().handleExcelSeq(new File("/Users/zyl/Documents/itaojingit/excelhandler/刘斤12-03.xlsx"));
 		//new ExcelHandler().handleExcelSeq2(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话12.03(1).xlsx"));
-		new ExcelHandler().handleExcelSeq3(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话12.03(1).xlsx"), "^[^AB]+");
+		//new ExcelHandler().handleExcelSeq3(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话12.03(1).xlsx"), "^[^AB]+");
+		//final String s = new ExcelHandler().checkExcelBlankRow(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话12.03(1).xlsx"));
+		//System.out.println(s);
 	}
 }
