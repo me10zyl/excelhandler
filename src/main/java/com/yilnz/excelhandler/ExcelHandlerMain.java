@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class ExcelHandlerMain  extends Application {
 	private static final Logger logger = LoggerFactory.getLogger(ExcelHandlerMain.class);
@@ -19,7 +20,8 @@ public class ExcelHandlerMain  extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			ExcelHandlerMain.primaryStage = primaryStage;
-			final Parent main = FXMLLoader.load(this.getClass().getResource("/main.fxml"));
+			final URL resource = this.getClass().getResource("/main.fxml");
+			final Parent main = FXMLLoader.load(resource);
 			final Scene scene = new Scene(main);
 			primaryStage.setScene(scene);
 			primaryStage.show();

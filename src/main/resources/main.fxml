@@ -15,5 +15,7 @@
       <TextField fx:id="input2" layoutX="180.0" layoutY="284.0" prefHeight="27.0" prefWidth="365.0" />
       <Label layoutX="85.0" layoutY="289.0" text="列2正则表达式" />
       <Button fx:id="btn4" layoutX="85.0" layoutY="37.0" mnemonicParsing="false" text="检查是否有空行" />
+      <Button fx:id="btn5" layoutX="408.0" layoutY="207.0" mnemonicParsing="false" text="批量删除第一行 " />
+      <Button fx:id="btnBrowse2" layoutX="492.0" layoutY="150.0" mnemonicParsing="false" text="选择文件夹..." />
    </children>
 </AnchorPane>

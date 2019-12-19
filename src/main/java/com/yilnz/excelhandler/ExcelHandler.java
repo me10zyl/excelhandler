@@ -9,10 +9,7 @@ import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,12 +80,32 @@ public class ExcelHandler {
 		//return false;
 	}
 
-	public void handleExcelSeq(File file) {
-		try {
-			final Workbook workbook = getWorkbook(file);
-			final Sheet sheet = workbook.getSheetAt(0);
-			handlerSeq = 1;
-			String value = null;
+    public void handleExcelSeq(File file) {
+        final Workbook workbook;
+        try {
+            workbook = getWorkbook(file);
+            handleExcelSeq(workbook, file, 0);
+            workbook.write(new FileOutputStream(renamedFile(file)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void handleExcelSeqSheets(File file) throws IOException {
+        final Workbook workbook = getWorkbook(file);
+        final int numberOfSheets = workbook.getNumberOfSheets();
+        for (int i = 0; i < numberOfSheets; i++) {
+            handleExcelSeq(workbook, file, i);
+        }
+        workbook.write(new FileOutputStream(renamedFile(file)));
+    }
+
+
+	public void handleExcelSeq(Workbook workbook, File file, int sheetIndex) {
+        final Sheet sheet = workbook.getSheetAt(sheetIndex);
+        handlerSeq = 1;
+        String value = null;
 /*
 			for (int i = sheet.getNumMergedRegions() - 1; i >= 0; i--) {
 				CellRangeAddress region = sheet.getMergedRegion(i);
@@ -120,83 +137,77 @@ public class ExcelHandler {
 				sheet.removeMergedRegion(i);
 			}*/
 
-			while (sheet.getNumMergedRegions() > 0) {
-			//	logger.info("Number of merged regions = " + sheet.getNumMergedRegions());
-				for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
-			//		logger.info("Removing merged region " + (i + 1));
-					if(sheet.getMergedRegion(i).getFirstColumn() == 0){
-						sheet.removeMergedRegion(i);
-					}
-				}
-			}
+        removeMerged(sheet);
 
 
-			final Iterator<Row> rowIterator = sheet.rowIterator();
-			int text = 0;
-			Row last = null;
+        final Iterator<Row> rowIterator = sheet.rowIterator();
+        int text = 0;
+        Row last = null;
 
-			Row startRow = null;
-			Row endRow = null;
-			for(int i = 0;i <= sheet.getLastRowNum();i++){
-				final Row next = sheet.getRow(i);
-				if (next == null) {
-					if (text == 1) {
-						endRow = sheet.getRow(i - 1);
-						//do
-						doHandleExcelSeq(startRow, endRow);
-					}
-					text = 0;
-					continue;
-				}
-				final Cell cell1 = next.getCell(0);
-				if (cell1 != null) {
-					next.removeCell(cell1);
-				}
-				last = next;
-				final Cell cell = next.getCell(1);
-				if (cell == null || StringUtils.isBlank(cell.toString().trim())) {
-					if (text == 1) {
-						endRow = sheet.getRow(next.getRowNum() - 1);
-						//do
-						doHandleExcelSeq(startRow, endRow);
-					}
-					text = 0;
-				} else {
-					if (text == 0) {
-						startRow = next;
-					}
-					text = 1;
-				}
-			}
+        Row startRow = null;
+        Row endRow = null;
+        for(int i = 0;i <= sheet.getLastRowNum();i++){
+            final Row next = sheet.getRow(i);
+            if (next == null) {
+                if (text == 1) {
+                    endRow = sheet.getRow(i - 1);
+                    //do
+                    doHandleExcelSeq(startRow, endRow);
+                }
+                text = 0;
+                continue;
+            }
+            final Cell cell1 = next.getCell(0);
+            if (cell1 != null) {
+                next.removeCell(cell1);
+            }
+            last = next;
+            final Cell cell = next.getCell(1);
+            if (cell == null || StringUtils.isBlank(cell.toString().trim())) {
+                if (text == 1) {
+                    endRow = sheet.getRow(next.getRowNum() - 1);
+                    //do
+                    doHandleExcelSeq(startRow, endRow);
+                }
+                text = 0;
+            } else {
+                if (text == 0) {
+                    startRow = next;
+                }
+                text = 1;
+            }
+        }
 
-			if (text == 1) {
-				endRow = last;
-				//do
-				doHandleExcelSeq(startRow, endRow);
-			}
+        if (text == 1) {
+            endRow = last;
+            //do
+            doHandleExcelSeq(startRow, endRow);
+        }
 
 
-			workbook.write(new FileOutputStream(renamedFile(file)));
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-	}
+        //workbook.write(new FileOutputStream(renamedFile(file)));
+    }
 
-	public void handleExcelSeq2(File file) {
+    public static void removeMerged(Sheet sheet) {
+        while (sheet.getNumMergedRegions() > 0) {
+            //	logger.info("Number of merged regions = " + sheet.getNumMergedRegions());
+            for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
+                //		logger.info("Removing merged region " + (i + 1));
+                //if (sheet.getMergedRegion(i).getFirstColumn() == 0) {
+                    sheet.removeMergedRegion(i);
+                //}
+            }
+        }
+    }
+
+    public void handleExcelSeq2(File file) {
 		try {
 			final Workbook workbook = getWorkbook(file);
 			final Sheet sheet = workbook.getSheetAt(0);
 			handlerSeq = 1;
-			while (sheet.getNumMergedRegions() > 0) {
-				for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
-					if(sheet.getMergedRegion(i).getFirstColumn() == 0){
-						sheet.removeMergedRegion(i);
-					}
-				}
-			}
+            removeMerged(sheet);
 
-			int text = 0;
+            int text = 0;
 			Row last = null;
 
 			Row startRow = null;
@@ -226,30 +237,27 @@ public class ExcelHandler {
 				doHandleExcelSeq(startRow, endRow);
 			}
 
-
-			workbook.write(new FileOutputStream(renamedFile(file)));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}
 	}
 
+	public static File writeWorkBook(Workbook workbook, File file) throws IOException {
+        File newfile = renamedFile(file);
+        workbook.write(new FileOutputStream(newfile));
+        return newfile;
+    }
+
 	public void handleExcelSeq3(File file, String regex) {
 		try {
 			final Workbook workbook = getWorkbook(file);
 			final Sheet sheet = workbook.getSheetAt(0);
 			handlerSeq = 1;
-			while (sheet.getNumMergedRegions() > 0) {
-				for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
-					if(sheet.getMergedRegion(i).getFirstColumn() == 0){
-						sheet.removeMergedRegion(i);
-					}
-				}
-			}
+            removeMerged(sheet);
 
 
-
-			int text = 0;
+            int text = 0;
 			Row last = null;
 
 			Row startRow = null;
@@ -315,7 +323,7 @@ public class ExcelHandler {
 		return text;
 	}
 
-	private File renamedFile(File f){
+	public static File renamedFile(File f){
 		final String name = f.getName();
 		final String parent = f.getParent();
 		final int lastIndexOf = name.lastIndexOf('.');
@@ -325,7 +333,7 @@ public class ExcelHandler {
 
 
 	public static void main(String[] args) {
-		//new ExcelHandler().handleExcelSeq(new File("/Users/zyl/Documents/itaojingit/excelhandler/刘斤12-03.xlsx"));
+		new ExcelHandler().handleExcelSeq(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话11.29-485组.xlsx"));
 		//new ExcelHandler().handleExcelSeq2(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话12.03(1).xlsx"));
 		//new ExcelHandler().handleExcelSeq3(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话12.03(1).xlsx"), "^[^AB]+");
 		//final String s = new ExcelHandler().checkExcelBlankRow(new File("/Users/zyl/Documents/itaojingit/excelhandler/多轮对话12.03(1).xlsx"));

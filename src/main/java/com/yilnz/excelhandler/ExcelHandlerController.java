@@ -5,17 +5,23 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ExcelHandlerController implements Initializable {
 
 	@FXML
 	private Button btnBrowse;
+	@FXML
+	private Button btnBrowse2;
 	@FXML
 	private Button btn1;
 	@FXML
@@ -28,6 +34,8 @@ public class ExcelHandlerController implements Initializable {
 	private TextField input1;
 	@FXML
 	private TextField input2;
+	@FXML
+	private Button btn5;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -36,6 +44,14 @@ public class ExcelHandlerController implements Initializable {
 			fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("EXCEL文件", "xlsx", "xls"));
 			fileChooser.setTitle("Open Resource File");
 			final File file = fileChooser.showOpenDialog(ExcelHandlerMain.primaryStage);
+			if (file != null) {
+				input1.setText(file.getPath());
+			}
+		});
+		btnBrowse2.setOnAction(e -> {
+			final DirectoryChooser fileChooser = new DirectoryChooser();
+			fileChooser.setTitle("Open Resource File");
+			final File file = fileChooser.showDialog(ExcelHandlerMain.primaryStage);
 			if (file != null) {
 				input1.setText(file.getPath());
 			}
@@ -91,12 +107,38 @@ public class ExcelHandlerController implements Initializable {
 				alert.showAndWait();
 			}
 		});
+		btn5.setOnAction(e->{
+			if (validate("请选择文件夹")) return;
+			try {
+				final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				final File file = new File(input1.getText());
+				List<File> collect = null;
+				if (file.isDirectory()) {
+					collect = Arrays.stream(file.listFiles()).filter(f -> f.getName().endsWith(".xlsx") || f.getName().endsWith(".xls")).collect(Collectors.toList());
+				}else {
+					collect = Arrays.asList(file);
+				}
+
+				new ExcelHandler2().handleExcelDelFirstGroupLine(collect);
+				alert.setContentText("处理完毕。");
+				alert.showAndWait();
+			} catch (Exception ee) {
+				ee.printStackTrace();
+				final Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText(ee.getClass().toString() + ":" + ee.getMessage());
+				alert.showAndWait();
+			}
+		});
 	}
 
 	private boolean validate() {
+		return validate("请选择EXCEL文件");
+	}
+
+	private boolean validate(String msg) {
 		if (StringUtils.isBlank(input1.getText())) {
 			final Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setContentText("请选择EXCEL文件");
+			alert.setContentText(msg);
 			alert.showAndWait();
 			return true;
 		}
