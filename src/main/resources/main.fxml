@@ -4,18 +4,38 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yilnz.excelhandler.ExcelHandlerController">
-   <children>
-      <Button fx:id="btnBrowse" layoutX="393.0" layoutY="150.0" mnemonicParsing="false" text="选择Excel..." />
-      <TextField fx:id="input1" layoutX="85.0" layoutY="150.0" prefHeight="27.0" prefWidth="296.0" />
-      <Button fx:id="btn1" layoutX="86.0" layoutY="207.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="122.0" text="根据空白行合并" />
-      <Label layoutX="229.0" layoutY="82.0" text="ExcelHandler" />
-      <Button fx:id="btn2" layoutX="233.0" layoutY="207.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="142.0" text="合并列1数字" />
-      <Button fx:id="btn3" layoutX="86.0" layoutY="328.0" mnemonicParsing="false" text="根据列2正则合并" />
-      <TextField fx:id="input2" layoutX="180.0" layoutY="284.0" prefHeight="27.0" prefWidth="365.0" />
-      <Label layoutX="85.0" layoutY="289.0" text="列2正则表达式" />
-      <Button fx:id="btn4" layoutX="85.0" layoutY="37.0" mnemonicParsing="false" text="检查是否有空行" />
-      <Button fx:id="btn5" layoutX="408.0" layoutY="207.0" mnemonicParsing="false" text="批量删除第一行 " />
-      <Button fx:id="btnBrowse2" layoutX="492.0" layoutY="150.0" mnemonicParsing="false" text="选择文件夹..." />
-   </children>
-</AnchorPane>
+
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yilnz.excelhandler.ExcelHandlerController">
+   <tabs>
+      <Tab text="excel处理1">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <ListView fx:id="listCSV" layoutX="22.0" layoutY="14.0" prefHeight="375.0" prefWidth="331.0" />
+                  <TextField fx:id="inputCSV" layoutX="382.0" layoutY="28.0" prefHeight="27.0" prefWidth="198.0" />
+                  <Button fx:id="btnCSV" layoutX="420.0" layoutY="175.0" mnemonicParsing="false" text="读取csv并排序" />
+               </children>
+            </AnchorPane>
+        </content>
+      </Tab>
+      <Tab text="excel处理2">
+         <content>
+            <AnchorPane prefHeight="400.0" prefWidth="600.0">
+               <children>
+                  <Button fx:id="btnBrowse" layoutX="393.0" layoutY="150.0" mnemonicParsing="false" text="选择Excel..." />
+                  <TextField fx:id="input1" layoutX="85.0" layoutY="150.0" prefHeight="27.0" prefWidth="296.0" />
+                  <Button fx:id="btn1" layoutX="86.0" layoutY="207.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="122.0" text="根据空白行合并" />
+                  <Label layoutX="229.0" layoutY="82.0" text="ExcelHandler" />
+                  <Button fx:id="btn2" layoutX="233.0" layoutY="207.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="142.0" text="合并列1数字" />
+                  <Button fx:id="btn3" layoutX="86.0" layoutY="328.0" mnemonicParsing="false" text="根据列2正则合并" />
+                  <TextField fx:id="input2" layoutX="180.0" layoutY="284.0" prefHeight="27.0" prefWidth="365.0" />
+                  <Label layoutX="85.0" layoutY="289.0" text="列2正则表达式" />
+                  <Button fx:id="btn4" layoutX="85.0" layoutY="37.0" mnemonicParsing="false" text="检查是否有空行" />
+                  <Button fx:id="btn5" layoutX="408.0" layoutY="207.0" mnemonicParsing="false" text="批量删除第一行 " />
+                  <Button fx:id="btnBrowse2" layoutX="492.0" layoutY="150.0" mnemonicParsing="false" text="选择文件夹..." />
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
+   </tabs>
+</TabPane>
