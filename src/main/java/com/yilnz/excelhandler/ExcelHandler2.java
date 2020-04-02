@@ -1,6 +1,7 @@
 package com.yilnz.excelhandler;
 
 import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -36,6 +37,36 @@ public class ExcelHandler2 {
        /* for (int i = rowIndex; i < lastRowNum; i++) {
             sheet.getRow(rowIndex).setR
         }*/
+    }
+
+    public void handleExcelDelFirstGroupLine2(List<File> files) throws IOException {
+        for (File file : files) {
+            if(!(file.getName().endsWith(".xlsx") || file.getName().endsWith(".xls"))){
+                continue;
+            }
+            final Workbook workbook = ExcelHandler.getWorkbook(file);
+            final int numberOfSheets = workbook.getNumberOfSheets();
+            final Workbook workbook2 = ExcelHandler.getWorkbook(ExcelHandler.renamedFile(file));
+            final ExcelWriter writer = ExcelUtil.getWriter(ExcelHandler.renamedFile(file));
+
+            for (int i = 0; i < numberOfSheets; i++) {
+                final Sheet sheet = workbook.getSheetAt(i);
+                for(int j = 0;j <= sheet.getLastRowNum();j++){
+                    final Row row = sheet.getRow(j);
+
+                    if (row != null) {
+                        final short lastCellNum = row.getLastCellNum();
+                        for(int c = 1; c <= lastCellNum;c++){
+                            final Cell cell1 = row.getCell(c);
+                            if(cell1 != null) {
+                                final Cell cell = sheet.createRow(i).createCell(c);
+                                cell.setCellValue(cell1.toString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public  void handleExcelDelFirstGroupLine(List<File> files) throws IOException {
