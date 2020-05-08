@@ -50,8 +50,8 @@ public class YuinHandler {
 				pw1.println(x);
 				pw1.flush();
 			}else{
-				pw2.println(s);
-				pw1.flush();
+				pw2.println(url);
+				pw2.flush();
 			}
 		}
 		pw1.close();
